@@ -41,9 +41,10 @@ export default function Home() {
         }}>
           <img
             src={data.images[data.images.length - 1]}
-            className="card-img h-100"
+            className="card-img"
             style={{
               objectFit: "contain",
+              height: "200px"
             }}
             alt={data.images[0]}
           />
