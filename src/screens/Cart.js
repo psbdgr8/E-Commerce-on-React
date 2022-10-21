@@ -4,7 +4,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { solid, brands } from "@fortawesome/fontawesome-svg-core/import.macro";
 import { useDispatch, useSelector } from "react-redux";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "font-awesome/css/font-awesome.min.css";
 import Loader from "../components/Loader";
 import { delCart, addCart, remCart } from "../redux/action";
 
@@ -22,7 +21,7 @@ export default function Cart() {
 
   const products = useSelector((state) => state.handleCart.cart);
   const total = useSelector((state) => state.handleCart.total);
-  const shipping =  total < 1 ? 0 : 50;
+  const shipping = total < 1 ? 0 : 50;
   console.log(products);
 
   const CartList = products.map((data) => {
@@ -38,7 +37,7 @@ export default function Cart() {
               }}
             >
               <img
-                src={data.images[data.images.length - 1 ]}
+                src={data.images[data.images.length - 1]}
                 className="img-fluid rounded-3"
                 style={{
                   width: "120px",
@@ -161,32 +160,28 @@ export default function Cart() {
                 <tbody>
                   {products.length < 1 ? (
                     <tr>
-                    <th>
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "center",
-                        }}
-                      >
-                        <h3 style={{}}>Your cart is empty</h3>
-                      </div>
-                    </th></tr>
+                      <th>
+                        <div className="text-center"
+                        >
+                          <Link to={"/"}>
+                            <div style={{ fontWeight: "normal" }}>
+                              Your cart is empty shop now.
+                            </div>
+                          </Link>
+                        </div>
+                      </th>
+                    </tr>
                   ) : (
                     CartList
                   )}
                 </tbody>
               </table>
             </div>
-            <div
-              className="card shadow-2-strong mb-5 mb-lg-0"
-              style={{
-                borderRadius: "16px",
-              }}
-            >
+            <div className="card text-center">
               <div className="card-body">
-                <div className="col-lg-4 col-xl-3">
+                <div className="">
                   <div
-                    className="d-flex justify-content-between"
+                    className="d-flex justify-content-evenly"
                     style={{
                       fontWeight: "inherit",
                     }}
@@ -195,19 +190,19 @@ export default function Cart() {
                     <p className="mb-2">₹{Math.trunc(total * 82.44)}</p>
                   </div>
                   <div
-                    className="d-flex justify-content-between"
+                    className="d-flex justify-content-evenly"
                     style={{
                       fontWeight: "inherit",
                     }}
                   >
                     <p className="mb-0">Shipping</p>
-                    <p className="mb-0">₹{shipping}</p>
+                    <p style={{marginLeft: 24}}>+ ₹{shipping}</p>
                   </div>
 
                   <hr className="my-4" />
 
                   <div
-                    className="d-flex justify-content-between mb-4"
+                    className="d-flex justify-content-evenly mb-4"
                     style={{
                       fontWeight: "inherit",
                     }}
@@ -222,8 +217,8 @@ export default function Cart() {
                     type="button"
                     className="btn btn-primary btn-block btn-lg"
                   >
-                    <div className="d-flex justify-content-between">
-                      <span>Checkout</span>
+                    <div className="d-flex">
+                      <span>Buy Now</span>
                     </div>
                   </button>
                 </div>
