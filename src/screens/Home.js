@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
-import { useDispatch } from "react-redux";
-import { addCart } from "../redux/action";
+import { useDispatch, useSelector } from "react-redux";
+import { addCart, delCart } from "../redux/action";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "font-awesome/css/font-awesome.min.css";
@@ -13,10 +13,18 @@ export default function Home() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const url = "https://dummyjson.com/products";
+  const cartIteme = useSelector((state) => state.handleCart.cart);
+  const idss = cartIteme.map((c) => {
+    return c.id;
+  });
 
   const dispatch = useDispatch();
   const addProduct = (products) => {
     dispatch(addCart(products));
+  };
+
+  const delProduct = (products) => {
+    dispatch(delCart(products));
   };
 
   async function fetchProducts() {
@@ -36,15 +44,18 @@ export default function Home() {
   const productlist = products.map((data) => {
     return (
       <div className="col-md" key={data.id}>
-        <div className="card h-100" style={{
-          padding: 10
-        }}>
+        <div
+          className="card h-100"
+          style={{
+            padding: 10,
+          }}
+        >
           <img
             src={data.images[data.images.length - 1]}
             className="card-img"
             style={{
               objectFit: "contain",
-              height: "200px"
+              height: "200px",
             }}
             alt={data.images[0]}
           />
@@ -74,20 +85,75 @@ export default function Home() {
                 <FontAwesomeIcon icon={solid("eye")} />
               </div>
             </Link>
-            <div
-              className=" button btn btn-outline-success"
-              style={{
-                height: "40px",
-                width: "40%",
-                marginBottom: "10px",
-                margin: "10px",
-              }}
-              onClick={() => {
-                addProduct(products[products.indexOf(data)]);
-              }}
-            >
-              <FontAwesomeIcon icon={solid("cart-shopping")} />
-            </div>
+            {idss.includes(data.id) ? (
+              <div
+                style={{
+                  height: "40px",
+                  width: "40%",
+                  border: "1px solid blue",
+                  marginTop: "10px",
+                  borderRadius: "6px",
+                }}
+              >
+                <div
+                  style={{
+                    height: "40px",
+                    display: "flex",
+                    justifyContent: "space-evenly"
+                  }}
+                >
+                  <FontAwesomeIcon
+                    style={{
+                      marginTop: "auto",
+                      marginBottom: "auto",
+                    }}
+                    icon={solid("minus")}
+                    onClick={() => {
+                      delProduct(products[products.indexOf(data)]);
+                    }}
+                  />
+                  <div
+                    style={{
+                      marginTop: "auto",
+                      marginBottom: "auto",
+                    }}
+                  >
+                    {cartIteme.map((a) => {
+                      {
+                        if (a.id === data.id) {
+                          return a.qty;
+                        }
+                      }
+                    })}
+                  </div>
+                  <FontAwesomeIcon
+                    style={{
+                      marginTop: "auto",
+                      marginBottom: "auto",
+                    }}
+                    onClick={() => {
+                      addProduct(products[products.indexOf(data)]);
+                    }}
+                    icon={solid("plus")}
+                  />
+                </div>
+              </div>
+            ) : (
+              <div
+                className=" button btn btn-outline-success"
+                style={{
+                  height: "40px",
+                  width: "40%",
+                  marginBottom: "10px",
+                  margin: "10px",
+                }}
+                onClick={() => {
+                  addProduct(products[products.indexOf(data)]);
+                }}
+              >
+                <FontAwesomeIcon icon={solid("cart-shopping")} />
+              </div>
+            )}
           </div>
         </div>
       </div>
