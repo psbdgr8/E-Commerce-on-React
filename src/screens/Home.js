@@ -14,9 +14,13 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const url = "https://dummyjson.com/products";
   const cartIteme = useSelector((state) => state.handleCart.cart);
-  const idss = cartIteme.map((c) => {
-    return c.id;
-  });
+  const idss = React.useMemo(
+    () =>
+      cartIteme.map((c) => {
+        return c.id;
+      }),
+    [cartIteme]
+  );
 
   const dispatch = useDispatch();
   const addProduct = (products) => {
@@ -99,7 +103,7 @@ export default function Home() {
                   style={{
                     height: "40px",
                     display: "flex",
-                    justifyContent: "space-evenly"
+                    justifyContent: "space-evenly",
                   }}
                 >
                   <FontAwesomeIcon

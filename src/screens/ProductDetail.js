@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Loader from "../components/Loader";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { addCart, addCount } from "../redux/action";
-import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
+import { addCart, addCount, remCart, delCart } from "../redux/action";
+import { regular, solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 import "./ProductDetails.css";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -18,16 +18,34 @@ export default function ProductDetail() {
 
   const dispatch = useDispatch();
   const addedProducts = useSelector((state) => state.handleCart.cart);
+  const removeProduct = (products) => {
+    dispatch(remCart(products));
+  };
 
+  const cartIteme = useSelector((state) => state.handleCart.cart);
+  const idss = React.useMemo(
+    () =>
+      cartIteme.map((c) => {
+        return c.id;
+      }),
+    [cartIteme]
+  );
 
   function AddtoCart(products) {
     products.qty = count;
-    console.log(products)
-    dispatch(addCount(products));
+    console.log(products);
+    if (count > 0) {
+      dispatch(addCount(products));
+    }
   }
-
+  const delProduct = (products) => {
+    dispatch(delCart(products));
+  };
+  const addProduct = (products) => {
+    dispatch(addCart(products));
+  };
   function Minus() {
-    if (count > 1) {
+    if (count > 0) {
       setCount(count - 1);
     } else {
       setCount(count);
@@ -189,9 +207,21 @@ export default function ProductDetail() {
                   justifyContent: "center",
                 }}
               >
-                <div className="btn btn-secondary" onClick={Minus}>
-                  <FontAwesomeIcon icon={solid("minus")} />
-                </div>
+                {idss.includes(products.id) ? (
+                  <div
+                    className="btn btn-secondary"
+                    onClick={() => {
+                      delProduct(products);
+                      Minus();
+                    }}
+                  >
+                    <FontAwesomeIcon icon={solid("minus")} />
+                  </div>
+                ) : (
+                  <div className="btn btn-secondary" onClick={Minus}>
+                    <FontAwesomeIcon icon={solid("minus")} />
+                  </div>
+                )}
                 <div
                   style={{
                     paddingTop: "3px",
@@ -207,9 +237,21 @@ export default function ProductDetail() {
                 >
                   {count}
                 </div>
-                <div className="btn btn-primary" onClick={Plus}>
-                  <FontAwesomeIcon icon={solid("plus")} />
-                </div>
+                {idss.includes(products.id) ? (
+                  <div
+                    className="btn btn-primary"
+                    onClick={() => {
+                      addProduct(products);
+                      Plus();
+                    }}
+                  >
+                    <FontAwesomeIcon icon={solid("plus")} />
+                  </div>
+                ) : (
+                  <div className="btn btn-primary" onClick={Plus}>
+                    <FontAwesomeIcon icon={solid("plus")} />
+                  </div>
+                )}
               </div>
             </div>
             <div
@@ -222,12 +264,25 @@ export default function ProductDetail() {
                 justifyContent: "center",
               }}
             >
-              <button
-                className="btn btn-success"
-                onClick={() => AddtoCart(products)}
-              >
-                Add to Cart <FontAwesomeIcon icon={solid("cart-shopping")} />
-              </button>
+              {idss.includes(products.id) ? (
+                <button
+                  className="btn btn-success"
+                  onClick={() => {
+                    removeProduct(products);
+                    setCount(0);
+                  }}
+                >
+                  Remove from Cart{" "}
+                  <FontAwesomeIcon icon={solid("cart-shopping")} />
+                </button>
+              ) : (
+                <button
+                  className="btn btn-success"
+                  onClick={() => AddtoCart(products)}
+                >
+                  Add to Cart <FontAwesomeIcon icon={solid("cart-shopping")} />
+                </button>
+              )}
             </div>
           </div>
           <div
